@@ -7,7 +7,7 @@ DelegateModel {
     function lessThan(left, right) {
         var leftTitle = left.title ? left.title : left.fullName
         var rightTitle = right.title ? right.title : right.fullName
-        return leftTitle < rightTitle;
+        return leftTitle.localeCompare(rightTitle) < 0;
     }
 
     function insertPosition(item) {
