@@ -21,8 +21,7 @@ void GoogleContactsWidget::setup()
             }
         }
     });
-    //this->setSource(QUrl("qrc:/qml/GoogleContacts.qml"));
-    this->setSource(QUrl("/home/xavier/workspace/karunit_google_contacts/qml/GoogleContacts.qml"));
+    this->setSource(QUrl("qrc:/qml/GoogleContacts.qml"));
 
     this->wrapper->askDeviceCode("https://www.google.com/m8/feeds");
 
