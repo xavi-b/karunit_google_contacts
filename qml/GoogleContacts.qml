@@ -82,18 +82,34 @@ Item {
             XmlRole { name: "phoneNumber1"; query: "gd:phoneNumber[1]/string()" }
             XmlRole { name: "phoneNumber2"; query: "gd:phoneNumber[2]/string()" }
             XmlRole { name: "phoneNumber3"; query: "gd:phoneNumber[3]/string()" }
+
+            onStatusChanged: function(status) {
+                if (status == XmlListModel.Null) {
+                    console.log("Null");
+                }
+                if (status == XmlListModel.Ready) {
+                    console.log("Ready");
+                    console.log(count);
+                    sortedModel.sort()
+                }
+                if (status == XmlListModel.Loading) {
+                    console.log("Loading");
+                }
+                if (status == XmlListModel.Error) {
+                    console.log("Error");
+                    console.log(errorString());
+                }
+            }
         }
 
-        ListView {
-            id: contactsList
-            anchors.fill: parent
-            spacing: 5
+        SortingModel {
+            id: sortedModel
             model: contactsModel
 
             delegate: Row {
                 width: 320
                 leftPadding: (contactsList.width - width)/2
-                height: phoneNumber1 ? childrenRect.height : 0
+                height: childrenRect.height
                 Rectangle {
                     color: "lightgrey"
                     width: parent.width
@@ -137,6 +153,13 @@ Item {
                     }
                 }
             }
+        }
+
+        ListView {
+            id: contactsList
+            anchors.fill: parent
+            spacing: 5
+            model: sortedModel
         }
     }
 

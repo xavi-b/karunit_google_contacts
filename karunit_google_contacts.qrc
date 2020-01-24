@@ -3,5 +3,6 @@
         <file>qml/GoogleContacts.qml</file>
         <file>qml/Header.qml</file>
         <file>res/code_secret_client.json</file>
+        <file>qml/SortingModel.qml</file>
     </qresource>
 </RCC>
