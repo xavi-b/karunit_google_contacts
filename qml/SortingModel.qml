@@ -37,7 +37,6 @@ DelegateModel {
 
     function sort() {
         var rowCount = model.count;
-        items.remove(0, rowCount);
 
         for(var i = 0; i < rowCount; ++i) {
             var entry = model.get(i);
