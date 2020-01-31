@@ -36,6 +36,7 @@ public:
 
 private:
     QQmlEngine engine;
+    GoogleContactsWidget* widget = nullptr;
 };
 
 

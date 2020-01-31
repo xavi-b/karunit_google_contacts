@@ -15,7 +15,12 @@ private:
 
 public:
     GoogleContactsWidget(QQmlEngine* engine, QWidget* parent = nullptr);
-    void setup();
+    void setup(QString refreshToken);
+    void goToAskDeviceCode();
+    QGoogleWrapper* getWrapper() { return this->wrapper; }
+
+public slots:
+    void askDeviceCode();
 
 signals:
     void log(QString const& log);

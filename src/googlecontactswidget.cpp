@@ -6,7 +6,7 @@ GoogleContactsWidget::GoogleContactsWidget(QQmlEngine* engine, QWidget *parent)
     this->setResizeMode(QQuickWidget::SizeRootObjectToView);
 }
 
-void GoogleContactsWidget::setup()
+void GoogleContactsWidget::setup(QString refreshToken)
 {
     this->wrapper = new QGoogleWrapper(":/res/code_secret_client.json", this);
     connect(this->wrapper, &QGoogleWrapper::log, this, &GoogleContactsWidget::log);
@@ -23,7 +23,13 @@ void GoogleContactsWidget::setup()
     });
     this->setSource(QUrl("qrc:/qml/GoogleContacts.qml"));
 
-    this->wrapper->askDeviceCode("https://www.google.com/m8/feeds");
+    if(!refreshToken.isEmpty())
+    {
+        this->wrapper->setRefreshToken(refreshToken);
+        this->wrapper->askAccessToken();
+    }
+
+    connect(this->rootObject(), SIGNAL(askDeviceCodeSignal()), this, SLOT(askDeviceCode()));
 
     connect(this->wrapper, &QGoogleWrapper::pendingVerification, this, [=](QString const& verificationUrl, QString const& userCode)
     {
@@ -50,4 +56,28 @@ void GoogleContactsWidget::setup()
             emit log("contactsRequest " + reply->errorString());
         });
     });
+
+    connect(this->wrapper, &QGoogleWrapper::pollingTimedOut, this, &GoogleContactsWidget::goToAskDeviceCode);
+    connect(this->wrapper, &QGoogleWrapper::deviceCodeRequestError, this, [=](QString const& error)
+    {
+        emit log("deviceCodeRequestError " + error);
+    });
+    connect(this->wrapper, &QGoogleWrapper::pollingRequestError, this, [=](QString const& error)
+    {
+        emit log("deviceCodeRequestError " + error);
+    });
+    connect(this->wrapper, &QGoogleWrapper::accessTokenRequestError, this, [=](QString const& error)
+    {
+        emit log("deviceCodeRequestError " + error);
+    });
+}
+
+void GoogleContactsWidget::askDeviceCode()
+{
+    this->wrapper->askDeviceCode("https://www.google.com/m8/feeds");
+}
+
+void GoogleContactsWidget::goToAskDeviceCode()
+{
+    QMetaObject::invokeMethod(this->rootObject(), "authenticated");
 }

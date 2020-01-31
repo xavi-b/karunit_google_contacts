@@ -5,7 +5,13 @@ import QtQuick.XmlListModel 2.14
 import QZXing 2.3
 
 Item {
+    id: googlecontacts
     visible: true
+
+    function askDeviceCode() {
+        stackView.clear(StackView.PopTransition);
+        stackView.push(waitingPage, {}, StackView.PopTransition);
+    }
 
     function pendingVerification(verificationUrl: string, userCode: string) {
         qrcode.source = "image://QZXing/encode/" + verificationUrl;
@@ -22,14 +28,17 @@ Item {
         contactsModel.xml = contactsXml;
     }
 
+    signal askDeviceCodeSignal()
+
     Page {
         id: waitingPage
 
         header: Header { }
 
-        Label {
-            text: qsTr("Waiting for Google Contacts authorization request")
-            anchors.fill: parent
+        Button {
+            text: qsTr("Ask for device code")
+            anchors.centerIn: parent
+            onClicked: googlecontacts.askDeviceCodeSignal();
         }
     }
 

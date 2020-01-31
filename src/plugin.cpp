@@ -45,10 +45,10 @@ QWidget* KU_GoogleContacts_Plugin::createWidget()
     QZXing::registerQMLTypes();
     QZXing::registerQMLImageProvider(this->engine);
 
-    auto widget = new GoogleContactsWidget(&this->engine);
-    connect(widget, &GoogleContactsWidget::log, this->getPluginConnector(), &KU::PLUGIN::PluginConnector::log);
-    widget->setup();
-    return widget;
+    this->widget = new GoogleContactsWidget(&this->engine);
+    connect(this->widget, &GoogleContactsWidget::log, this->getPluginConnector(), &KU::PLUGIN::PluginConnector::log);
+    this->widget->setup(KU::Settings::instance()->value(this->id(), "refresh_token", QString()).toString());
+    return this->widget;
 }
 
 QWidget* KU_GoogleContacts_Plugin::createSettingsWidget()
@@ -63,5 +63,8 @@ bool KU_GoogleContacts_Plugin::loadSettings()
 
 bool KU_GoogleContacts_Plugin::saveSettings() const
 {
+    if(!this->widget->getWrapper()->getRefreshToken().isEmpty())
+        KU::Settings::instance()->setValue(this->id(), "refresh_token", this->widget->getWrapper()->getRefreshToken());
+    KU::Settings::instance()->sync();
     return KU::Settings::instance()->status() == QSettings::NoError;
 }
