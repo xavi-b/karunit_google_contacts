@@ -9,21 +9,17 @@ DEFINES += ENABLE_ENCODER_GENERIC
 CONFIG += qzxing_qml
 include($$PWD/third-party/qzxing/src/QZXing.pri)
 
-LIBS += -L$$PWD/third-party/QGoogleWrapper/
-LIBS += -lQGoogleWrapper
+LIBS += -L$$PWD/third-party/QGoogleWrapper/ -lQGoogleWrapper
 INCLUDEPATH += $$PWD/third-party/QGoogleWrapper/src/
-DEPENDPATH += $$PWD/third-party/QGoogleWrapper/src/
 
-LIBS += -L$$PWD/../karunit/lib/
-LIBS += -L$$PWD/../karunit/app/plugins/
-
-LIBS += -lplugininterface
+LIBS += -L$$PWD/../karunit/plugininterface/ -lplugininterface
 INCLUDEPATH += $$PWD/../karunit/plugininterface
-DEPENDPATH += $$PWD/../karunit/plugininterface
 
-LIBS += -lcommon
+LIBS += -L$$PWD/../karunit/common/ -lcommon
 INCLUDEPATH += $$PWD/../karunit/common
-DEPENDPATH += $$PWD/../karunit/common
+
+LIBS += -L$$PWD/../karunit/third-party/xblog/ -lxblog
+INCLUDEPATH += $$PWD/../karunit/third-party/xblog/src
 
 SUBDIRS += \
     src/ \

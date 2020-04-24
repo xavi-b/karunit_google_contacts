@@ -15,11 +15,6 @@ KU::PLUGIN::PluginVersion KU_GoogleContacts_Plugin::version() const
     return { 1, 0, 0 };
 }
 
-QSet<KU::PLUGIN::PluginInfo> KU_GoogleContacts_Plugin::dependencies() const
-{
-    return QSet<KU::PLUGIN::PluginInfo>();
-}
-
 QString KU_GoogleContacts_Plugin::license() const
 {
     return "LGPL";
@@ -30,7 +25,7 @@ QIcon KU_GoogleContacts_Plugin::icon() const
     return QIcon();
 }
 
-bool KU_GoogleContacts_Plugin::initialize(const QSet<KU::PLUGIN::PluginInterface*>& plugins)
+bool KU_GoogleContacts_Plugin::initialize()
 {
     return true;
 }
