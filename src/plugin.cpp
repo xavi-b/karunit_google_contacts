@@ -42,6 +42,12 @@ QWidget* KU_GoogleContacts_Plugin::createWidget()
 
     this->widget = new GoogleContactsWidget(&this->engine);
     connect(this->widget, &GoogleContactsWidget::log, this->getPluginConnector(), &KU::PLUGIN::PluginConnector::log);
+    connect(this->widget, &GoogleContactsWidget::callSignal, this, [&](QString number)
+    {
+        QVariantMap data;
+        data["number"] = number;
+        this->getPluginConnector()->emitPluginChoiceSignal("dial", data);
+    });
     this->widget->setup(KU::Settings::instance()->value(this->id(), "refresh_token", QString()).toString());
     return this->widget;
 }

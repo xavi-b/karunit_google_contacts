@@ -24,6 +24,8 @@ public slots:
 
 signals:
     void log(QString const& log);
+    void callSignal(QString number);
+
 
 };
 

@@ -30,6 +30,7 @@ void GoogleContactsWidget::setup(QString refreshToken)
     }
 
     connect(this->rootObject(), SIGNAL(askDeviceCodeSignal()), this, SLOT(askDeviceCode()));
+    connect(this->rootObject(), SIGNAL(callSignal(QString)), this, SIGNAL(callSignal(QString)));
 
     connect(this->wrapper, &QGoogleWrapper::pendingVerification, this, [=](QString const& verificationUrl, QString const& userCode)
     {

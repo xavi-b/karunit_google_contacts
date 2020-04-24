@@ -29,6 +29,7 @@ Item {
     }
 
     signal askDeviceCodeSignal()
+    signal callSignal(var string)
 
     Page {
         id: waitingPage
@@ -157,7 +158,7 @@ Item {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            console.log("click");
+                            googlecontacts.callSignal(phoneNumber1);
                         }
                     }
                 }
