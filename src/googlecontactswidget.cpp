@@ -8,7 +8,7 @@ GoogleContactsWidget::GoogleContactsWidget(QQmlEngine* engine, QWidget *parent)
 
 void GoogleContactsWidget::setup(QString refreshToken)
 {
-    this->wrapper = new QGoogleWrapper(":/res/code_secret_client.json", this);
+    this->wrapper = new QGoogleWrapper(":/karunit_google_contacts/res/code_secret_client.json", this);
     connect(this->wrapper, &QGoogleWrapper::log, this, &GoogleContactsWidget::log);
 
     connect(this, &QQuickWidget::statusChanged, this, [=](QQuickWidget::Status status)
@@ -21,7 +21,7 @@ void GoogleContactsWidget::setup(QString refreshToken)
             }
         }
     });
-    this->setSource(QUrl("qrc:/qml/GoogleContacts.qml"));
+    this->setSource(QUrl("qrc:/karunit_google_contacts/qml/GoogleContacts.qml"));
 
     if(!refreshToken.isEmpty())
     {

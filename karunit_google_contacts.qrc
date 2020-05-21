@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/karunit_google_contacts">
         <file>qml/GoogleContacts.qml</file>
         <file>qml/Header.qml</file>
         <file>res/code_secret_client.json</file>
