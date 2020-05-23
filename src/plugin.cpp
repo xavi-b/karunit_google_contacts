@@ -57,6 +57,11 @@ QWidget* KU_GoogleContacts_Plugin::createSettingsWidget()
     return nullptr;
 }
 
+QWidget* KU_GoogleContacts_Plugin::createAboutWidget()
+{
+    return nullptr;
+}
+
 bool KU_GoogleContacts_Plugin::loadSettings()
 {
     return true;
