@@ -9,8 +9,8 @@ DEFINES += ENABLE_ENCODER_GENERIC
 CONFIG += qzxing_qml
 include($$PWD/third-party/qzxing/src/QZXing.pri)
 
-LIBS += -L$$PWD/third-party/QGoogleWrapper/ -lQGoogleWrapper
-INCLUDEPATH += $$PWD/third-party/QGoogleWrapper/src/
+LIBS += -L$$PWD/third-party/QGoogleWrapper/lib -lQGoogleWrapper
+INCLUDEPATH += $$PWD/third-party/QGoogleWrapper/include
 
 LIBS += -L$$PWD/../karunit/plugininterface/ -lplugininterface
 INCLUDEPATH += $$PWD/../karunit/plugininterface
