@@ -29,7 +29,7 @@ Item {
     }
 
     signal askDeviceCodeSignal()
-    signal callSignal(var string)
+    signal callSignal(string number)
 
     Page {
         id: waitingPage
@@ -118,7 +118,7 @@ Item {
 
             delegate: Row {
                 width: 320
-                leftPadding: (contactsList.width - width)/2
+                //TODO leftPadding: (contactsList.width - width)/2
                 height: childrenRect.height
                 Rectangle {
                     color: "lightgrey"
@@ -126,7 +126,7 @@ Item {
                     height: childrenRect.height
 
                     Column {
-                        padding: 5
+                        //TODO padding: 5
                         TextEdit {
                             id: titleTextEdit
                             text: title ? title : fullName
