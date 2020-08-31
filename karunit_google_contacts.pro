@@ -9,6 +9,11 @@ DEFINES += ENABLE_ENCODER_GENERIC
 CONFIG += qzxing_qml
 include($$PWD/third-party/qzxing/src/QZXing.pri)
 
+libQGoogleWrapper.target = $$PWD/third-party/QGoogleWrapper/libQGoogleWrapper.so
+libQGoogleWrapper.commands += cd $$PWD/third-party/QGoogleWrapper && qmake && make
+QMAKE_EXTRA_TARGETS += libQGoogleWrapper
+PRE_TARGETDEPS += $$libQGoogleWrapper.target
+
 LIBS += -L$$PWD/third-party/QGoogleWrapper/lib -lQGoogleWrapper
 INCLUDEPATH += $$PWD/third-party/QGoogleWrapper/include
 
