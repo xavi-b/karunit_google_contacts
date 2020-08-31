@@ -1,7 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 2.4
-import QtQuick.Layouts 1.12
-import QtQuick.XmlListModel 2.14
+import QtQuick.Layouts 1.11
+import QtQuick.XmlListModel 2.11
 import QZXing 2.3
 
 Item {
