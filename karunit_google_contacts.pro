@@ -17,10 +17,10 @@ PRE_TARGETDEPS += $$libQGoogleWrapper.target
 LIBS += -L$$PWD/third-party/QGoogleWrapper/lib -lQGoogleWrapper
 INCLUDEPATH += $$PWD/third-party/QGoogleWrapper/include
 
-LIBS += -L$$PWD/../karunit/plugininterface/ -lplugininterface
+LIBS += -L$$PWD/../karunit/plugininterface/ -lkarunit_plugininterface
 INCLUDEPATH += $$PWD/../karunit/plugininterface
 
-LIBS += -L$$PWD/../karunit/common/ -lcommon
+LIBS += -L$$PWD/../karunit/common/ -lkarunit_common
 INCLUDEPATH += $$PWD/../karunit/common
 
 LIBS += -L$$PWD/../karunit/third-party/xblog/lib -lxblog
