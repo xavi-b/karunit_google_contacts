@@ -19,12 +19,12 @@ qzxing.files = $$PWD/third-party/qzxing/src/libQZXing.so*
 qzxing.path = /usr/lib
 INSTALLS += qzxing
 
-libQGoogleWrapper.target = $$PWD/third-party/QGoogleWrapper/libQGoogleWrapper.so
+libQGoogleWrapper.target = $$PWD/third-party/QGoogleWrapper/lib/libQGoogleWrapper.so
 libQGoogleWrapper.commands += cd $$PWD/third-party/QGoogleWrapper && qmake && make -j4
 QMAKE_EXTRA_TARGETS += libQGoogleWrapper
 PRE_TARGETDEPS += $$libQGoogleWrapper.target
 
-libQGoogleWrapper.files = $$PWD/third-party/QGoogleWrapper/libQGoogleWrapper.so*
+libQGoogleWrapper.files = $$PWD/third-party/QGoogleWrapper/lib/libQGoogleWrapper.so*
 libQGoogleWrapper.path = /usr/lib
 INSTALLS += libQGoogleWrapper
 
