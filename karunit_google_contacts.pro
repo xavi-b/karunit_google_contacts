@@ -5,14 +5,33 @@ QT             += widgets qml quick quickwidgets xml
 TARGET          = karunit_google_contacts_plugin
 DESTDIR         = $$PWD/../karunit/app/plugins
 
-DEFINES += ENABLE_ENCODER_GENERIC
-CONFIG += qzxing_qml
-include($$PWD/third-party/qzxing/src/QZXing.pri)
+unix {
+target.path = /usr/local/bin/plugins
+INSTALLS += target
+}
+
+qzxing.target = $$PWD/third-party/qzxing/src/libQZXing.so
+qzxing.commands += cd $$PWD/third-party/qzxing/src && qmake "CONFIG+=qzxing_qml" "DEFINES+=ENABLE_ENCODER_GENERIC" && make -j4
+QMAKE_EXTRA_TARGETS += qzxing
+PRE_TARGETDEPS += $$qzxing.target
+
+qzxing.files = $$PWD/third-party/qzxing/src/libQZXing.so*
+qzxing.path = /usr/lib
+INSTALLS += qzxing
 
 libQGoogleWrapper.target = $$PWD/third-party/QGoogleWrapper/libQGoogleWrapper.so
-libQGoogleWrapper.commands += cd $$PWD/third-party/QGoogleWrapper && qmake && make
+libQGoogleWrapper.commands += cd $$PWD/third-party/QGoogleWrapper && qmake && make -j4
 QMAKE_EXTRA_TARGETS += libQGoogleWrapper
 PRE_TARGETDEPS += $$libQGoogleWrapper.target
+
+libQGoogleWrapper.files = $$PWD/third-party/QGoogleWrapper/libQGoogleWrapper.so*
+libQGoogleWrapper.path = /usr/lib
+INSTALLS += libQGoogleWrapper
+
+DEFINES += QZXING_QML
+DEFINES += ENABLE_ENCODER_GENERIC
+LIBS += -L$$PWD/third-party/qzxing/src -lQZXing
+INCLUDEPATH += $$PWD/third-party/qzxing/src
 
 LIBS += -L$$PWD/third-party/QGoogleWrapper/lib -lQGoogleWrapper
 INCLUDEPATH += $$PWD/third-party/QGoogleWrapper/include
