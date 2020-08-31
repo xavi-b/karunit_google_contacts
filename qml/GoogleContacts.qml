@@ -13,7 +13,7 @@ Item {
         stackView.push(waitingPage, {}, StackView.PopTransition);
     }
 
-    function pendingVerification(verificationUrl: string, userCode: string) {
+    function pendingVerification(verificationUrl, userCode) {
         qrcode.source = "image://QZXing/encode/" + verificationUrl;
         verificationUrlLabel.text = verificationUrl;
         userCodeLabel.text = userCode;
@@ -24,7 +24,7 @@ Item {
         stackView.push(contactsPage);
     }
 
-    function contactsRequest(contactsXml: string) {
+    function contactsRequest(contactsXml) {
         contactsModel.xml = contactsXml;
     }
 
