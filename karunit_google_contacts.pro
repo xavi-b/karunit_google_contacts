@@ -1,7 +1,7 @@
 TEMPLATE        = lib
 CONFIG         += plugin c++17
 DEFINES        += QT_DEPRECATED_WARNINGS
-QT             += widgets qml quick quickwidgets xml
+QT             += qml quick xml
 TARGET          = karunit_google_contacts_plugin
 DESTDIR         = $$PWD/../karunit/app/plugins
 
@@ -46,11 +46,9 @@ LIBS += -L$$PWD/../karunit/third-party/xblog/lib -lxblog
 INCLUDEPATH += $$PWD/../karunit/third-party/xblog/include
 
 SUBDIRS += \
-    src/ \
-    qm/
+    src/
 
 include(src/src.pri)
-include(qml/qml.pri)
 
 RESOURCES += \
     karunit_google_contacts.qrc

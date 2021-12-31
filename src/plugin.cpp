@@ -1,4 +1,5 @@
 #include "plugin.h"
+#include <QQmlEngine>
 
 QString KU_GoogleContacts_Plugin::name() const
 {
@@ -7,12 +8,12 @@ QString KU_GoogleContacts_Plugin::name() const
 
 QString KU_GoogleContacts_Plugin::id() const
 {
-    return "google.contacts";
+    return "karunit_google_contacts";
 }
 
 KU::PLUGIN::PluginVersion KU_GoogleContacts_Plugin::version() const
 {
-    return { 1, 0, 0 };
+    return {1, 0, 0};
 }
 
 QString KU_GoogleContacts_Plugin::license() const
@@ -20,46 +21,25 @@ QString KU_GoogleContacts_Plugin::license() const
     return "LGPL";
 }
 
-QIcon KU_GoogleContacts_Plugin::icon() const
+QString KU_GoogleContacts_Plugin::icon() const
 {
-    return QIcon();
+    return QString();
 }
 
 bool KU_GoogleContacts_Plugin::initialize()
 {
+    QZXing::registerQMLTypes();
+
+    this->getPluginConnector()->setup();
+
+    qmlRegisterSingletonInstance("KarunitPlugins", 1, 0, "KUPGoogleContactsPluginConnector", this->pluginConnector);
+
     return true;
 }
 
 bool KU_GoogleContacts_Plugin::stop()
 {
     return true;
-}
-
-QWidget* KU_GoogleContacts_Plugin::createWidget()
-{
-    QZXing::registerQMLTypes();
-    QZXing::registerQMLImageProvider(this->engine);
-
-    this->widget = new GoogleContactsWidget(&this->engine);
-    connect(this->widget, &GoogleContactsWidget::log, this->getPluginConnector(), &KU::PLUGIN::PluginConnector::log);
-    connect(this->widget, &GoogleContactsWidget::callSignal, this, [&](QString number)
-    {
-        QVariantMap data;
-        data["number"] = number;
-        this->getPluginConnector()->emitPluginChoiceSignal("dial", data);
-    });
-    this->widget->setup(KU::Settings::instance()->value(this->id(), "refresh_token", QString()).toString());
-    return this->widget;
-}
-
-QWidget* KU_GoogleContacts_Plugin::createSettingsWidget()
-{
-    return nullptr;
-}
-
-QWidget* KU_GoogleContacts_Plugin::createAboutWidget()
-{
-    return nullptr;
 }
 
 bool KU_GoogleContacts_Plugin::loadSettings()
@@ -69,8 +49,12 @@ bool KU_GoogleContacts_Plugin::loadSettings()
 
 bool KU_GoogleContacts_Plugin::saveSettings() const
 {
-    if(!this->widget->getWrapper()->getRefreshToken().isEmpty())
-        KU::Settings::instance()->setValue(this->id(), "refresh_token", this->widget->getWrapper()->getRefreshToken());
-    KU::Settings::instance()->sync();
     return KU::Settings::instance()->status() == QSettings::NoError;
+}
+
+KU_GoogleContacts_PluginConnector* KU_GoogleContacts_Plugin::getPluginConnector()
+{
+    if (this->pluginConnector == nullptr)
+        this->pluginConnector = new KU_GoogleContacts_PluginConnector;
+    return qobject_cast<KU_GoogleContacts_PluginConnector*>(this->pluginConnector);
 }

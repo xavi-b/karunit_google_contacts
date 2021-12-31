@@ -1,58 +1,74 @@
-import QtQuick 2.5
-import QtQuick.Controls 2.4
-import QtQuick.Layouts 1.11
-import QtQuick.XmlListModel 2.11
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.XmlListModel 2.15
 import QZXing 2.3
+
+import Karunit 1.0
+import KarunitPlugins 1.0
 
 Item {
     id: googlecontacts
     visible: true
 
+    Connections {
+        target: KUPGoogleContactsPluginConnector
+        function onAuthenticated() {
+            stackView.push(contactsPage)
+        }
+
+        function onPendingVerification(verificationUrl, userCode) {
+            qrcode.source = "image://QZXing/encode/" + verificationUrl
+            verificationUrlLabel.text = verificationUrl
+            userCodeLabel.text = userCode
+            stackView.push(connectionPage)
+        }
+
+        function onContactsRequest(contactsXml) {
+            contactsModel.xml = contactsXml
+        }
+    }
+
     function askDeviceCode() {
-        stackView.clear(StackView.PopTransition);
-        stackView.push(waitingPage, {}, StackView.PopTransition);
+        stackView.clear(StackView.PopTransition)
+        stackView.push(waitingPage, {}, StackView.PopTransition)
     }
 
-    function pendingVerification(verificationUrl, userCode) {
-        qrcode.source = "image://QZXing/encode/" + verificationUrl;
-        verificationUrlLabel.text = verificationUrl;
-        userCodeLabel.text = userCode;
-        stackView.push(connectionPage);
+    function askDeviceCodeSignal() {
+        KUPGoogleContactsPluginConnector.askDeviceCode()
     }
 
-    function authenticated() {
-        stackView.push(contactsPage);
+    function callSignal(number) {
+        KUPGoogleContactsPluginConnector.call(number)
     }
 
-    function contactsRequest(contactsXml) {
-        contactsModel.xml = contactsXml;
+    Component.onDestruction: {
+        if (KUPGoogleContactsPluginConnector.refreshToken !== "")
+            KUSettings.save("karunit_google_contacts/refresh_token",
+                            KUPGoogleContactsPluginConnector.refreshToken)
     }
-
-    signal askDeviceCodeSignal()
-    signal callSignal(string number)
 
     Page {
         id: waitingPage
 
-        header: Header { }
-
         Button {
             text: qsTr("Ask for device code")
             anchors.centerIn: parent
-            onClicked: googlecontacts.askDeviceCodeSignal();
+            onClicked: {
+                KUPGoogleContactsPluginConnector.setEngine(this)
+                googlecontacts.askDeviceCodeSignal()
+            }
         }
     }
 
     Page {
         id: connectionPage
 
-        header: Header { }
-
         ColumnLayout {
             anchors.centerIn: parent
             Image {
                 id: qrcode
-                cache: false;
+                cache: false
                 sourceSize.width: 200
                 sourceSize.height: 200
                 Layout.alignment: Qt.AlignHCenter
@@ -79,35 +95,48 @@ Item {
     Page {
         id: contactsPage
 
-        header: Header { }
-
         XmlListModel {
             id: contactsModel
             query: "/feed/entry"
             namespaceDeclarations: "declare default element namespace 'http://www.w3.org/2005/Atom';"
-            + "declare namespace gd='http://schemas.google.com/g/2005';"
+                                   + "declare namespace gd='http://schemas.google.com/g/2005';"
 
-            XmlRole { name: "title"; query: "title/string()" }
-            XmlRole { name: "fullName"; query: "gd:name/gd:fullName/string()" }
-            XmlRole { name: "phoneNumber1"; query: "gd:phoneNumber[1]/string()" }
-            XmlRole { name: "phoneNumber2"; query: "gd:phoneNumber[2]/string()" }
-            XmlRole { name: "phoneNumber3"; query: "gd:phoneNumber[3]/string()" }
+            XmlRole {
+                name: "title"
+                query: "title/string()"
+            }
+            XmlRole {
+                name: "fullName"
+                query: "gd:name/gd:fullName/string()"
+            }
+            XmlRole {
+                name: "phoneNumber1"
+                query: "gd:phoneNumber[1]/string()"
+            }
+            XmlRole {
+                name: "phoneNumber2"
+                query: "gd:phoneNumber[2]/string()"
+            }
+            XmlRole {
+                name: "phoneNumber3"
+                query: "gd:phoneNumber[3]/string()"
+            }
 
-            onStatusChanged: function(status) {
+            onStatusChanged: function (status) {
                 if (status == XmlListModel.Null) {
-                    console.log("Null");
+                    console.log("Null")
                 }
                 if (status == XmlListModel.Ready) {
-                    console.log("Ready");
-                    console.log(count);
+                    console.log("Ready")
+                    console.log(count)
                     sortedModel.sort()
                 }
                 if (status == XmlListModel.Loading) {
-                    console.log("Loading");
+                    console.log("Loading")
                 }
                 if (status == XmlListModel.Error) {
-                    console.log("Error");
-                    console.log(errorString());
+                    console.log("Error")
+                    console.log(errorString())
                 }
             }
         }
@@ -117,8 +146,7 @@ Item {
             model: contactsModel
 
             delegate: Row {
-                width: 320
-                //TODO leftPadding: (contactsList.width - width)/2
+                width: contactsList.width
                 height: childrenRect.height
                 Rectangle {
                     color: "lightgrey"
@@ -126,7 +154,7 @@ Item {
                     height: childrenRect.height
 
                     Column {
-                        //TODO padding: 5
+                        padding: 5
                         TextEdit {
                             id: titleTextEdit
                             text: title ? title : fullName
@@ -158,7 +186,7 @@ Item {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            googlecontacts.callSignal(phoneNumber1);
+                            googlecontacts.callSignal(phoneNumber1)
                         }
                     }
                 }
@@ -170,6 +198,10 @@ Item {
             anchors.fill: parent
             spacing: 5
             model: sortedModel
+
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AlwaysOn
+            }
         }
     }
 
@@ -177,5 +209,21 @@ Item {
         id: stackView
         initialItem: waitingPage
         anchors.fill: parent
+    }
+
+    RoundButton {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 20
+
+        id: toolButton
+        text: "X"
+        visible: stackView.depth > 1
+        font.pixelSize: Qt.application.font.pixelSize * 1.6
+        onClicked: {
+            if (stackView.depth > 1) {
+                stackView.pop()
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 HEADERS += \
-    $$PWD/googlecontactswidget.h \
+    $$PWD/googlecontactspluginconnector.h \
     $$PWD/plugin.h
 
 SOURCES += \
-    $$PWD/googlecontactswidget.cpp \
+    $$PWD/googlecontactspluginconnector.cpp \
     $$PWD/plugin.cpp
