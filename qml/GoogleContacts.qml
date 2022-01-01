@@ -42,12 +42,6 @@ Item {
         KUPGoogleContactsPluginConnector.call(number)
     }
 
-    Component.onDestruction: {
-        if (KUPGoogleContactsPluginConnector.refreshToken !== "")
-            KUSettings.save("karunit_google_contacts/refresh_token",
-                            KUPGoogleContactsPluginConnector.refreshToken)
-    }
-
     Page {
         id: waitingPage
 

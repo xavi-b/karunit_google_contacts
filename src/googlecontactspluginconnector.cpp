@@ -4,8 +4,7 @@
 KU_GoogleContacts_PluginConnector::KU_GoogleContacts_PluginConnector(QObject* parent)
     : KU::PLUGIN::PluginConnector(parent)
 {
-    this->wrapper      = new QGoogleWrapper(":/karunit_google_contacts/res/code_secret_client.json", this);
-    this->refreshToken = KU::Settings::instance()->get("karunit_google_contacts/refresh_token", QString()).toString();
+    this->wrapper = new QGoogleWrapper(":/karunit_google_contacts/res/code_secret_client.json", this);
 }
 
 void KU_GoogleContacts_PluginConnector::setEngine(QObject* obj)
@@ -15,6 +14,9 @@ void KU_GoogleContacts_PluginConnector::setEngine(QObject* obj)
 
 void KU_GoogleContacts_PluginConnector::setup()
 {
+    this->refreshToken = KU::Settings::instance()->get("karunit_google_contacts/refresh_token", QString()).toString();
+    emitLogSignal(QString("loaded refresh_token ") + this->refreshToken);
+
     connect(this->wrapper, &QGoogleWrapper::log, this, &KU_GoogleContacts_PluginConnector::log);
 
     if (!refreshToken.isEmpty())
@@ -32,6 +34,11 @@ void KU_GoogleContacts_PluginConnector::setup()
         emit authenticated();
 
         this->refreshToken = this->wrapper->getRefreshToken();
+        if (!this->refreshToken.isEmpty() && this->refreshToken != "true")
+        {
+            KU::Settings::instance()->save("karunit_google_contacts/refresh_token", this->refreshToken);
+            emitLogSignal(QString("saved refresh_token " + this->refreshToken));
+        }
 
         QNetworkRequest request;
         request.setUrl(QUrl("https://www.google.com/m8/feeds/contacts/default/full?max-results=1000"));
