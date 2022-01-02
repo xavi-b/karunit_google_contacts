@@ -211,7 +211,8 @@ Item {
         anchors.margins: 20
 
         id: toolButton
-        text: "X"
+        icon.name: "window-close"
+        icon.color: "transparent"
         visible: stackView.depth > 1
         font.pixelSize: Qt.application.font.pixelSize * 1.6
         onClicked: {
