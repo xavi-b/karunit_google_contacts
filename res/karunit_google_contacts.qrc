@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/karunit_google_contacts">
         <file alias="widget.qml">qml/GoogleContacts.qml</file>
-        <file>res/code_secret_client.json</file>
+        <file>code_secret_client.json</file>
         <file alias="SortingModel.qml">qml/SortingModel.qml</file>
     </qresource>
 </RCC>
